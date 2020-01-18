@@ -14,5 +14,7 @@ public interface MrDao {
    	public void updateMrData(int mrId, MR mr);
 
    	public void deleteMrData(int mrId);
+   	
+   	public List<MR> getMrDatabyID(int mrId);
 }
 	 

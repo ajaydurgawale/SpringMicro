@@ -1,5 +1,6 @@
 package com.csi.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -8,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.springframework.stereotype.Repository;
 
+import com.csi.model.Drug;
 import com.csi.model.MR;
 
 @Repository
@@ -20,7 +22,7 @@ public class MrImpl implements MrDao {
 		// TODO Auto-generated method stub
 		factory = new AnnotationConfiguration().configure().buildSessionFactory();
 		Session session = factory.openSession();
-		List<MR> mrList = session.createQuery("from MR").list();
+		List<MR> mrList = session.createQuery("select mr.mrName from MR mr").list();
 		return mrList;
 
 	}
@@ -31,9 +33,10 @@ public class MrImpl implements MrDao {
 		factory = new AnnotationConfiguration().configure().buildSessionFactory();
 		Session session = factory.openSession();
 		Transaction transaction = session.beginTransaction();
+		System.out.println("NAME:         "+ mr.getMrName());
 		session.save(mr);
 		transaction.commit();
-		}
+	}
 
 	@Override
 	public void updateMrData(int mrId, MR mr) {
@@ -41,12 +44,16 @@ public class MrImpl implements MrDao {
 		factory = new AnnotationConfiguration().configure().buildSessionFactory();
 		Session session = factory.openSession();
 		Transaction transaction = session.beginTransaction();
+		List<Drug> drugList = new ArrayList<>();
 		List<MR> mrList = session.createQuery("from MR").list();
 		for (MR mrdata : mrList) {
 			if (mrdata.getMrId() == mrId) {
 				mrdata.setMrName(mr.getMrName());
 				mrdata.setMrHighestEdu(mr.getMrHighestEdu());
-				session.update(mrdata);
+				drugList.addAll(mrdata.getDrug());
+				drugList.addAll(mr.getDrug());
+				mrdata.setDrug(drugList);
+				session.save(mrdata);
 				transaction.commit();
 			}
 		}
@@ -67,21 +74,20 @@ public class MrImpl implements MrDao {
 		}
 
 	}
-	/*public List<Customer> getCustomerListbyID(int customerId) {
+
+	public List<MR> getMrDatabyID(int mrId) {
 		// TODO Auto-generated method stub
 		factory = new AnnotationConfiguration().configure().buildSessionFactory();
 		Session session = factory.openSession();
-		ArrayList<Customer> custdatabyID= new ArrayList<>();
-		List<Customer> custList = session.createQuery("from Customer").list();
-		for(Customer cust:custList)
-		{
-			if(cust.getCustomerId()==customerId)
-			{
-				custdatabyID.add(cust);
+		ArrayList<MR> mrdatabyID = new ArrayList<>();
+		List<MR> mrList = session.createQuery("from MR").list();
+		for (MR mr : mrList) {
+			if (mr.getMrId() == mrId) {
+				mrdatabyID.add(mr);
 			}
 		}
-		
-		return custdatabyID;
-	}*/
+
+		return mrdatabyID;
+	}
 
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.csi.dao.MrDao;
-import com.csi.model.Drug;
 import com.csi.model.MR;
 
 @RestController
@@ -44,5 +43,10 @@ public class Mrcontroller {
 	public String deleteData(@PathVariable("mrId") int mrId) {
 		mrdao.deleteMrData(mrId);
 		return "delete data successfully";
+	}
+	
+	@GetMapping("/getdatabyid/{mrId}")
+	public List<MR> getDatabyId(@PathVariable("mrId") int mrId) {
+		return mrdao.getMrDatabyID(mrId);
 	}
 }

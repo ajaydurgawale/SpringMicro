@@ -2,22 +2,26 @@ package com.csi.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
 public class MR {
-
+	
+	
 	private int mrId;
 	private String mrName;
 	private int mrMobileNumber;
 	private String mrHighestEdu;
+	//@OneToMany(mappedBy="mr")
 	private List<Drug> drug;
-
-	@OneToMany(targetEntity = Drug.class, mappedBy = "mr",fetch=FetchType.EAGER)
+	//targetEntity = Drug.class,,fetch=FetchType.EAGER
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "mr_mrId")
 	public List<Drug> getDrug() {
 		return drug;
 	}
